@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 
 @Data
 @Builder
@@ -29,10 +30,7 @@ public class User extends BaseEntity {
     private Long id; // 직원 고유 ID
 
     @Column(nullable = false)
-    private String firstName; // 직원 이름
-
-    @Column(nullable = false)
-    private String lastName; // 직원 성
+    private String name; // 직원 성
 
     @Column(nullable = false, unique = true)
     private String email; // 이메일 주소
