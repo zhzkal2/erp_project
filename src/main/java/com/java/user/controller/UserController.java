@@ -21,11 +21,6 @@ public class UserController {
 
     final UserService userService;
 
-    @GetMapping("/hello")
-    public String hello() {
-        return "Hello World";
-    }
-
     //직원 등록
     @PostMapping("/save")
     public ResponseEntity<UserResponse> saveUser(@RequestBody UserRequest userRequest) {

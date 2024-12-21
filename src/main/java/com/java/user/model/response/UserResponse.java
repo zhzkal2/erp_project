@@ -15,6 +15,7 @@ public record UserResponse(
         String jobTitle,     // 직책
         Department department // 부서
 ) {
+
     public static UserResponse fromEntity(User user) {
         return new UserResponse(
                 user.getId(),

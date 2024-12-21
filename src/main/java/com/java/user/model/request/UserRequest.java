@@ -14,6 +14,7 @@ public record UserRequest(
         String jobTitle,     // 직책
         Department department // 부서
 ) {
+
     public User toEntity() {
         return User.builder()
                 .name(name)
@@ -25,7 +26,6 @@ public record UserRequest(
                 .department(department)
                 .build();
     }
-
 
 
 }
