@@ -4,7 +4,9 @@ import com.java.user.model.Department;
 import com.java.user.model.Gender;
 import com.java.user.model.User;
 import java.time.LocalDate;
+import lombok.Builder;
 
+@Builder
 public record UserResponse(
         Long id,             // 직원 고유 ID
         String name,         // 직원 성

@@ -4,7 +4,9 @@ import com.java.user.model.Department;
 import com.java.user.model.Gender;
 import com.java.user.model.User;
 import java.time.LocalDate;
+import lombok.Builder;
 
+@Builder
 public record UserRequest(
         String name,         // 직원 성
         String email,        // 이메일 주소
@@ -26,6 +28,8 @@ public record UserRequest(
                 .department(department)
                 .build();
     }
+
+
 
 
 }
