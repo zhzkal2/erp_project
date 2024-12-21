@@ -3,18 +3,22 @@ package com.java.user.model.request;
 import com.java.user.model.Department;
 import com.java.user.model.Gender;
 import com.java.user.model.User;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import lombok.Builder;
 
+
 @Builder
 public record UserRequest(
-        String name,         // 직원 성
-        String email,        // 이메일 주소
-        String phoneNumber,  // 전화번호
-        Gender gender,       // 성별
-        LocalDate hireDate,  // 고용일
-        String jobTitle,     // 직책
-        Department department // 부서
+        @NotBlank String name,
+        @Email @NotBlank String email,
+        @NotBlank String phoneNumber,
+        @NotNull Gender gender,
+        @NotNull LocalDate hireDate,
+        @NotBlank String jobTitle,
+        @NotNull Department department
 ) {
 
     public User toEntity() {
@@ -28,8 +32,4 @@ public record UserRequest(
                 .department(department)
                 .build();
     }
-
-
-
-
 }

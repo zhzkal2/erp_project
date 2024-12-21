@@ -17,53 +17,54 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-
     public UserResponse saveUser(UserRequest userRequest) {
+        if (userRepository.existsByEmail(userRequest.email())) {
+            throw new EmailAlreadyExistsException("이미 존재하는 이메일입니다.", 409);
+        }
         return UserResponse.fromEntity(userRepository.save(userRequest.toEntity()));
-
     }
 
     public UserResponse getUserById(Long id) {
-
         return userRepository.findById(id)
                 .map(UserResponse::fromEntity)
                 .orElseThrow(
-                        () -> new UserNotFoundException("User with ID " + id + " does not exist."));
-
+                        () -> new UserNotFoundException("User with ID " + id + " does not exist.",
+                                404));
     }
 
     public UserResponse updateUser(Long id, UserRequest userRequest) {
         return userRepository.findById(id)
                 .map(user -> {
-                    User updatedUser = user.toBuilder()  // 기존 유저 객체를 복사하고
-                            .name(userRequest.name())
-                            .email(userRequest.email())
-                            .phoneNumber(userRequest.phoneNumber())
-                            .jobTitle(userRequest.jobTitle())
-                            .department(userRequest.department())
-                            .build();
-
-                    //이메일 중복체크
-                    if (userRepository.existsByEmail(userRequest.email()) && !user.getEmail()
-                            .equals(userRequest.email())) {
-                        throw new EmailAlreadyExistsException("이미 존재하는 이메일입니다.");
-                    }
-                    // 업데이트된 사용자 저장하고 반환
+                    validateEmail(userRequest.email(), user.getEmail());
+                    User updatedUser = updateUserFields(user, userRequest);
                     return UserResponse.fromEntity(userRepository.save(updatedUser));
                 })
                 .orElseThrow(
-                        () -> new UserNotFoundException("User with ID " + id + " does not exist."));
-
-
+                        () -> new UserNotFoundException("User with ID " + id + " does not exist.",
+                                404));
     }
 
     public void deleteUser(Long id) {
-
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(
-                        "User with ID " + id + " does not exist."));
+                .orElseThrow(
+                        () -> new UserNotFoundException("User with ID " + id + " does not exist.",
+                                404));
         userRepository.delete(user);
     }
 
+    private void validateEmail(String newEmail, String currentEmail) {
+        if (userRepository.existsByEmail(newEmail) && !newEmail.equals(currentEmail)) {
+            throw new EmailAlreadyExistsException("이미 존재하는 이메일입니다.", 409);
+        }
+    }
 
+    private User updateUserFields(User user, UserRequest userRequest) {
+        return user.toBuilder()
+                .name(userRequest.name())
+                .email(userRequest.email())
+                .phoneNumber(userRequest.phoneNumber())
+                .jobTitle(userRequest.jobTitle())
+                .department(userRequest.department())
+                .build();
+    }
 }
